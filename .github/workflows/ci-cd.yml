@@ -73,26 +73,28 @@ jobs:
           release_name: "Release v${{ env.VERSION }}"
           draft: false
           prerelease: false
-- name: Check if tag exists
-  id: tag_check
-  run: |
-    if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
-      echo "tag_exists=true" >> $GITHUB_ENV
-    else
-      echo "tag_exists=false" >> $GITHUB_ENV
-    fi
+      - name: Check if tag exists
+        id: tag_check
+        run: |
+          if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+            echo "tag_exists=true" >> $GITHUB_ENV
+          else
+            echo "tag_exists=false" >> $GITHUB_ENV
+          fi
 
-- name: Create GitHub release
-  if: env.tag_exists == 'false'
-  uses: actions/create-release@v1
-  env:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  with:
-    tag_name: "v${{ env.VERSION }}"
-    release_name: "Release v${{ env.VERSION }}"
-    draft: false
-    prerelease: false
+      - name: Create GitHub release
+      if: env.tag_exists == 'false'
+        uses: actions/create-release@v1
+       env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       with:
+       tag_name: "v${{ env.VERSION }}"
+       release_name: "Release v${{ env.VERSION }}"
+       draft: false
+       prerelease: false
 
       - name: Send Telegram Alarm
         run: |
           python telegram_alarm.py "${{ secrets.TELEGRAM_BOT_TOKEN }}" "${{ secrets.TELEGRAM_CHAT_ID }}" "New release created: v${{ env.VERSION }}."
+
+
