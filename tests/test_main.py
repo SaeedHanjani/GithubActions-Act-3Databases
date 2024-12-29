@@ -1,3 +1,5 @@
+from src.sample import add
+
 import unittest
 from unittest.mock import patch
 from main import backup_mysql, restore_mysql, backup_postgres, restore_postgres, backup_mongo, restore_mongo
